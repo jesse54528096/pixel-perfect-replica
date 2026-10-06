@@ -1,27 +1,24 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
+
+import { useAuthUser } from "@/components/RequireAuth";
 import { SiteHeader } from "@/components/SiteHeader";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { usePageMeta } from "@/lib/use-page-meta";
 
-export const Route = createFileRoute("/_authenticated/app")({
-  head: () => ({
-    meta: [
-      { title: "Dashboard — Flight Price Notifier" },
-      { name: "description", content: "Your flight route tracking dashboard." },
-      { property: "og:title", content: "Dashboard — Flight Price Notifier" },
-      { property: "og:description", content: "Your flight route tracking dashboard." },
-    ],
-  }),
-  component: AppPage,
-});
-
-function AppPage() {
-  const { user } = Route.useRouteContext();
+export default function AppPage() {
+  usePageMeta({
+    title: "Dashboard — Flight Price Notifier",
+    description: "Your flight route tracking dashboard.",
+    ogTitle: "Dashboard — Flight Price Notifier",
+    ogDescription: "Your flight route tracking dashboard.",
+  });
+  const user = useAuthUser();
   const navigate = useNavigate();
 
   async function signOut() {
     await supabase.auth.signOut();
-    navigate({ to: "/" });
+    navigate("/");
   }
 
   return (
