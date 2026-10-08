@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 
+import { PlanCards } from "@/components/PlanCards";
 import { useAuthUser } from "@/components/RequireAuth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
@@ -23,14 +24,20 @@ export default function AppPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-hero">
-      <SiteHeader right={<Button variant="secondary" onClick={signOut}>Sign out</Button>} />
+      <SiteHeader
+        right={
+          <Button variant="secondary" onClick={signOut}>
+            Sign out
+          </Button>
+        }
+      />
       <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-20">
-        <div className="animate-fade-up rounded-2xl border border-border bg-card p-10">
-          <h1 className="text-3xl font-bold">Hi {user.email}</h1>
-          <p className="mt-4 text-lg">你的航線追蹤儀表板即將上線 — 下一個里程碑會加上訂閱航線的功能。</p>
-          <p className="mt-2 text-muted-foreground">
-            Your dashboard is coming soon. Route-subscription will be added in the next milestone.
-          </p>
+        <div className="animate-fade-up space-y-8">
+          <div>
+            <h1 className="text-3xl font-bold">Hi {user.email}</h1>
+            <p className="mt-2 text-lg">選一條航線、設定目標價，降價就通知你。</p>
+          </div>
+          {user.email && <PlanCards email={user.email} />}
         </div>
       </main>
     </div>
