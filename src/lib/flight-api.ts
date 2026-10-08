@@ -32,3 +32,20 @@ export async function saveSubscription(email: string, planName: PlanName, target
   const data = (await res.json().catch(() => ({}))) as { error?: string };
   if (!res.ok) throw new Error(data.error ?? `訂閱失敗（${res.status}）`);
 }
+
+export interface LatestPrice {
+  route: string;
+  month: string;
+  price: number;
+  currency: "TWD";
+  airline: string | null;
+  price_usd: number | null;
+  checked_at: string;
+}
+
+export async function listLatestPrices(): Promise<LatestPrice[]> {
+  const res = await fetch(`${API_BASE}/prices`);
+  if (!res.ok) throw new Error(`讀取票價失敗（${res.status}）`);
+  const data = (await res.json()) as { items: LatestPrice[] };
+  return data.items;
+}

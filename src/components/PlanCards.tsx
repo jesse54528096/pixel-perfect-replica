@@ -5,28 +5,41 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  listLatestPrices,
   listSubscriptions,
+  type LatestPrice,
   saveSubscription,
   type PlanName,
   type Subscription,
 } from "@/lib/flight-api";
 
-const PLANS: { name: PlanName; title: string; route: string; hint: number }[] = [
-  { name: "tokyo", title: "台北 ✈ 東京", route: "TPE-TYO", hint: 9325 },
-  { name: "seoul", title: "台北 ✈ 首爾", route: "TPE-SEL", hint: 5989 },
+const PLANS: { name: PlanName; title: string; route: string }[] = [
+  { name: "tokyo", title: "台北 ✈ 東京", route: "TPE-TYO" },
+  { name: "seoul", title: "台北 ✈ 首爾", route: "TPE-SEL" },
 ];
 
 const formatTwd = (n: number) => `NT$${n.toLocaleString("en-US")}`;
+
+function formatCheckedAt(iso: string) {
+  return new Date(iso).toLocaleString("zh-TW", {
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 function PlanCard({
   plan,
   email,
   subscription,
+  latest,
   onSaved,
 }: {
   plan: (typeof PLANS)[number];
   email: string;
   subscription?: Subscription | undefined;
+  latest?: LatestPrice | undefined;
   onSaved: (sub: Subscription) => void;
 }) {
   const [editing, setEditing] = useState(!subscription);
@@ -73,7 +86,9 @@ function PlanCard({
         {subscription && <Badge>已訂閱 / Subscribed</Badge>}
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
-        最近查到的最低價約 {formatTwd(plan.hint)}
+        {latest
+          ? `${latest.month.slice(5)} 月最低價 ${formatTwd(latest.price)}（${formatCheckedAt(latest.checked_at)} 更新）`
+          : "最低價查詢中…"}
       </p>
 
       {subscription && !editing ? (
@@ -94,7 +109,7 @@ function PlanCard({
               type="number"
               inputMode="numeric"
               min={1}
-              placeholder={String(plan.hint)}
+              placeholder={latest ? String(latest.price) : undefined}
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
@@ -111,7 +126,22 @@ function PlanCard({
 
 export function PlanCards({ email }: { email: string }) {
   const [subs, setSubs] = useState<Record<string, Subscription>>({});
+  const [prices, setPrices] = useState<Record<string, LatestPrice>>({});
   const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    listLatestPrices()
+      .then((items) => {
+        if (!cancelled) setPrices(Object.fromEntries(items.map((p) => [p.route, p])));
+      })
+      .catch(() => {
+        // Prices are a hint only; the cards still work without them.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -137,6 +167,7 @@ export function PlanCards({ email }: { email: string }) {
             plan={plan}
             email={email}
             subscription={subs[plan.route]}
+            latest={prices[plan.route]}
             onSaved={(sub) => setSubs((prev) => ({ ...prev, [sub.route]: sub }))}
           />
         ))}
