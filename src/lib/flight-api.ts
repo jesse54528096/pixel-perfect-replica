@@ -84,3 +84,22 @@ export async function listLatestPrices(): Promise<LatestPrice[]> {
   const data = (await res.json()) as { items: LatestPrice[] };
   return data.items;
 }
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+// The access token is optional: without it the bot answers general questions only.
+export async function sendChat(messages: ChatMessage[], accessToken?: string): Promise<string> {
+  const res = await fetch(`${API_BASE}/chat`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      ...(accessToken ? { authorization: `Bearer ${accessToken}` } : {}),
+    },
+    body: JSON.stringify({ messages: messages.slice(-12) }),
+  });
+  const data = (await res.json().catch(() => ({}))) as { reply?: string; error?: string };
+  if (!res.ok) throw new Error(data.error ?? `客服暫時無法回應（${res.status}）`);
+  return data.reply ?? "";
+}

@@ -1,4 +1,4 @@
-# Deployed Lambda sources (M2)
+# Deployed Lambda sources (M2, M4)
 
 Each folder holds the exact single-file `index.py` (handler `index.handler`, python3.12, role `flight-lambda-role`)
 deployed to the AWS Lambda function of the same name in us-east-1. The front-end never calls these directly
@@ -12,6 +12,7 @@ except through the `flight-api` HTTP API.
 | flight-ecpay-result | `ANY /ecpay-result` (OrderResultURL, 302 back to `/app`) |
 | flight-cancel-subscription | `POST /cancel` (Supabase token required; ECPay CreditCardPeriodAction Cancel → cancelled) |
 | flight-status-notification | SQS `flight-status-queue` (welcome / cancel emails via Resend) |
+| flight-chat | `POST /chat` (M4 AI customer service; optional Supabase token; LLM provider/key/model in `flight/llm`) |
 | flight-parser | invoked by flight-parser-wrapper (paywall: active, or cancelled until current_period_end) |
 
 ECPay credentials and the monthly amount live in the `flight/ecpay` Secrets Manager secret.

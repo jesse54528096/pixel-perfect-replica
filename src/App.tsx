@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Route, Routes } from "react-router";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ChatWidget } from "@/components/ChatWidget";
 import { RequireAuth } from "@/components/RequireAuth";
 import AppPage from "@/pages/AppPage";
 import Index from "@/pages/Index";
@@ -25,6 +26,7 @@ export function App() {
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ChatWidget />
       </ErrorBoundary>
     </QueryClientProvider>
   );
