@@ -16,7 +16,7 @@ MAX_CHARS = 500         # per user message
 MAX_TOOL_ROUNDS = 4
 DAILY_LIMIT_USER = 40   # messages per signed-in user per Taipei day
 DAILY_LIMIT_ANON = 10   # messages per anonymous IP per Taipei day
-ROUTES = "TPE-TYO 台北-東京、TPE-SEL 台北-首爾"  # keep in sync with PLANS in src/components/PlanCards.tsx
+ROUTES = "TPE-TYO 台北-東京、TPE-SEL 台北-首爾、TPE-LON 台北-倫敦、TPE-BKK 台北-曼谷"  # keep in sync with PLANS in src/components/PlanCards.tsx
 
 _sm = boto3.client("secretsmanager")
 _ddb = boto3.resource("dynamodb")

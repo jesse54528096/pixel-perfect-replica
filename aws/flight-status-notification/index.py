@@ -74,7 +74,7 @@ import html, urllib.request, urllib.error
 from decimal import Decimal
 
 UA = "Mozilla/5.0 (compatible; flight-notifier/1.0)"
-CITY = {"TPE": "台北", "TYO": "東京", "SEL": "首爾"}
+CITY = {"TPE": "台北", "TYO": "東京", "SEL": "首爾", "LON": "倫敦", "BKK": "曼谷"}
 SITE_URL = "https://pixel-perfect-replica-phi-tan.vercel.app"
 _hist = boto3.resource("dynamodb").Table("notification_history")
 _resend = None

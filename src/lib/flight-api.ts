@@ -4,7 +4,7 @@ const API_BASE = (
   import.meta.env["VITE_FLIGHT_API_URL"] ?? "https://upsjva3kv8.execute-api.us-east-1.amazonaws.com"
 ).replace(/\/$/, "");
 
-export type PlanName = "tokyo" | "seoul";
+export type PlanName = "tokyo" | "seoul" | "london" | "bangkok";
 
 export type SubscriptionStatus = "pending_payment" | "active" | "cancelled" | "expired";
 

@@ -30,6 +30,8 @@ import {
 const PLANS: { name: PlanName; title: string; route: string }[] = [
   { name: "tokyo", title: "台北 ✈ 東京", route: "TPE-TYO" },
   { name: "seoul", title: "台北 ✈ 首爾", route: "TPE-SEL" },
+  { name: "london", title: "台北 ✈ 倫敦", route: "TPE-LON" },
+  { name: "bangkok", title: "台北 ✈ 曼谷", route: "TPE-BKK" },
 ];
 
 // Display only; the amount actually charged comes from the flight/ecpay secret on the server.

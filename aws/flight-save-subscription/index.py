@@ -73,7 +73,8 @@ def taipei_date(dt):
 import html, os, re, secrets
 from decimal import Decimal, InvalidOperation
 
-PLANS = {"tokyo": {"origin": "TPE", "destination": "TYO"}, "seoul": {"origin": "TPE", "destination": "SEL"}}
+PLANS = {"tokyo": {"origin": "TPE", "destination": "TYO"}, "seoul": {"origin": "TPE", "destination": "SEL"},
+         "london": {"origin": "TPE", "destination": "LON"}, "bangkok": {"origin": "TPE", "destination": "BKK"}}
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 API_BASE = os.environ["API_BASE"].strip().rstrip("/")
 SITE_URL = os.environ["SITE_URL"].strip().rstrip("/")
@@ -126,7 +127,7 @@ def handler(event, context):
     if not EMAIL_RE.match(email):
         return resp(400, {"error": "invalid email"})
     if plan_name not in PLANS:
-        return resp(400, {"error": "plan_name must be tokyo or seoul"})
+        return resp(400, {"error": "plan_name must be one of " + ", ".join(PLANS)})
     try:
         target = Decimal(str(data.get("target_price")))
     except (InvalidOperation, TypeError):
